@@ -457,15 +457,14 @@
           <!-- Dropdown Model Kustom -->
           <div class="custom-dropdown" id="dropdownModel">
             <button class="dropdown-trigger">
-              <span>MODEL: <strong class="selected-value">Gemini 2.0 Pro Exp</strong></span>
+              <span>MODEL: <strong class="selected-value">Gemini 3.5 Flash</strong></span>
               <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div class="dropdown-menu">
               <div class="dropdown-group">
                 <div class="group-title">Google Gemini</div>
-                <div class="dropdown-item active" data-value="gemini/gemini-2.0-pro-exp-02-05">Gemini 2.0 Pro Exp</div>
-                <div class="dropdown-item" data-value="gemini/gemini-2.0-flash">Gemini 2.0 Flash</div>
-                <div class="dropdown-item" data-value="gemini/gemini-1.5-pro">Gemini 1.5 Pro</div>
+                <div class="dropdown-item active" data-value="gemini/gemini-3.5-flash">Gemini 3.5 Flash</div>
+                <div class="dropdown-item" data-value="gemini/gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite</div>
               </div>
               <div class="dropdown-group">
                 <div class="group-title">Groq Cloud</div>
@@ -607,8 +606,8 @@
   const currentProviderLabel = $('currentProviderLabel');
   const tutorialBox = $('tutorialBox');
 
-  // State global
-  let activeModelValue = 'gemini/gemini-2.0-pro-exp-02-05';
+  // State global - Diubah ke gemini-3.5-flash sebagai default awal
+  let activeModelValue = 'gemini/gemini-3.5-flash';
   let activeModeValue = 'coding';
   let activeProviderModal = 'gemini'; // Default provider di modal
 
@@ -871,7 +870,7 @@ Tulis prompt dalam Bahasa Indonesia yang profesional dan jelas. Langsung ke isi 
 Dari ide user, buat SATU prompt optimal siap-pakai dengan struktur:
 ## Tujuan Analisis / Kasus Bisnis
 ## Metode Analisis & Eksplorasi Data (EDA)
-## Model atau Algoritma yang Direkomendasikan
+## Model atau Algoritma yang Diedit/Direkomendasikan
 ## Desain Visualisasi Data yang Diperlukan
 ## Format Keluaran (Output) yang Diharapkan (Notebook/Code snippet/Report)
 Tulis prompt secara sistematis dalam Bahasa Indonesia. Langsung tampilkan hasil promptnya saja.`,
