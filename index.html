@@ -1,1152 +1,1888 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PromptForge — Ide jadi Prompt AI Siap Pakai</title>
-<style>
-  :root{
-    --bg: #0B0D10; /* Mengikuti warna hitam solid murni dari file SVG & Gambar referensi */
-    --bg-elev: #0e1114;
-    --bg-elev-2: #14181c;
-    --border: #1e2329;
-    --border-soft: #14171a;
-    --text: #f3f5f7;
-    --text-dim: #8e9aa8;
-    --text-faint: #525c66;
-    --accent: #ffffff; 
-    --accent-dim: #181b1f;
-    --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
-    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --radius: 8px; /* Tampilan sudut yang lebih tajam dan clean */
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PromptForge — Ide jadi Prompt AI Siap Pakai</title>
+    <style>
+      :root {
+        --bg: #0b0d10; /* Mengikuti warna hitam solid murni dari file SVG & Gambar referensi */
+        --bg-elev: #0e1114;
+        --bg-elev-2: #14181c;
+        --border: #1e2329;
+        --border-soft: #14171a;
+        --text: #f3f5f7;
+        --text-dim: #8e9aa8;
+        --text-faint: #525c66;
+        --accent: #ffffff;
+        --accent-dim: #181b1f;
+        --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+        --sans:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --radius: 8px; /* Tampilan sudut yang lebih tajam dan clean */
+      }
 
-  *{ box-sizing: border-box; margin:0; padding:0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  body{
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        min-height: 100vh;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
 
-  .app{ position:relative; min-height:100vh; display:flex; flex-direction:column; }
+      .app {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-  /* ============ HEADER ============ */
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 24px 40px;
-    border-bottom: 1px solid var(--border-soft);
-  }
-  .logo{
-    font-size: 16px; font-weight: 700; letter-spacing: -0.03em;
-    display:flex; align-items:center; gap:10px;
-  }
-  .logo .mark{
-    width:22px; height:22px; border-radius:4px;
-    background: var(--accent);
-    display:flex; align-items:center; justify-content:center;
-    font-family: var(--mono); font-size:12px; font-weight:900; color:#000;
-  }
+      /* ============ HEADER ============ */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 40px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .logo {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo .mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 900;
+        color: #000;
+      }
 
-  .header-stats{
-    display:flex; align-items:center; gap:20px;
-    font-size: 12px; color: var(--text-dim);
-  }
-  .stat{ display:flex; align-items:center; gap:6px; }
-  .dot-live{ width:6px; height:6px; border-radius:50%; background:#00ff66; }
-  .stat strong{ color: var(--text); }
+      .header-stats {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-size: 12px;
+        color: var(--text-dim);
+      }
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot-live {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #00ff66;
+      }
+      .stat strong {
+        color: var(--text);
+      }
 
-  .header-right{ display:flex; align-items:center; gap:12px; }
-  .btn-key{
-    background: var(--bg-elev-2); border:1px solid var(--border);
-    color: var(--text-dim); font-size: 12px; padding:7px 14px;
-    border-radius:var(--radius); cursor:pointer; display:flex; align-items:center; gap:7px;
-    transition: all .1s ease;
-    font-family: var(--sans);
-  }
-  .btn-key:hover{ border-color:var(--text-faint); color: var(--text); }
-  .key-dot{ width:5px; height:5px; border-radius:50%; background:#3e4751; }
-  .key-dot.set{ background:#00ff66; }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn-key {
+        background: var(--bg-elev-2);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition: all 0.1s ease;
+        font-family: var(--sans);
+      }
+      .btn-key:hover {
+        border-color: var(--text-faint);
+        color: var(--text);
+      }
+      .key-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #3e4751;
+      }
+      .key-dot.set {
+        background: #00ff66;
+      }
 
-  /* ============ MAIN / HERO ============ */
-  main{ flex:1; display:flex; flex-direction:column; align-items:center; padding: 80px 24px 40px; }
+      /* ============ MAIN / HERO ============ */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 80px 24px 40px;
+      }
 
-  .badge{
-    display:inline-flex; align-items:center; gap:8px;
-    background: var(--bg-elev); border:1px solid var(--border);
-    color: var(--text-dim); font-size:12px; font-weight:500;
-    padding:6px 12px; border-radius:4px; margin-bottom:24px;
-  }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 4px;
+        margin-bottom: 24px;
+      }
 
-  h1{
-    font-size: 40px; font-weight:800; letter-spacing:-0.04em;
-    text-align:center; max-width: 640px; margin-bottom:14px;
-    color: #ffffff;
-    line-height: 1.15;
-  }
+      h1 {
+        font-size: 40px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        text-align: center;
+        max-width: 640px;
+        margin-bottom: 14px;
+        color: #ffffff;
+        line-height: 1.15;
+      }
 
-  .sub-heading{
-    color: var(--text-dim); text-align:center; font-size:14.5px;
-    max-width: 500px; margin-bottom: 48px;
-    line-height: 1.6;
-  }
+      .sub-heading {
+        color: var(--text-dim);
+        text-align: center;
+        font-size: 14.5px;
+        max-width: 500px;
+        margin-bottom: 48px;
+        line-height: 1.6;
+      }
 
-  /* ============ INPUT CARD ============ */
-  .composer{
-    width:100%; max-width: 720px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-  .composer textarea{
-    width:100%; min-height: 110px; resize: none;
-    background: transparent; border:none; outline:none;
-    color: var(--text); font-family: var(--sans); font-size: 15px;
-    line-height:1.6;
-  }
-  .composer textarea::placeholder{ color: var(--text-faint); }
+      /* ============ INPUT CARD ============ */
+      .composer {
+        width: 100%;
+        max-width: 720px;
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+      }
+      .composer textarea {
+        width: 100%;
+        min-height: 110px;
+        resize: none;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .composer textarea::placeholder {
+        color: var(--text-faint);
+      }
 
-  .composer-footer{
-    display:flex; align-items:center; justify-content:space-between;
-    padding-top: 16px; border-top: 1px solid var(--border-soft); margin-top:12px;
-    flex-wrap: wrap; gap: 12px;
-  }
+      .composer-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-soft);
+        margin-top: 12px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
 
-  .composer-left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+      .composer-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-  /* ============ CUSTOM DROPDOWN STYLE ============ */
-  .custom-dropdown {
-    position: relative;
-    display: inline-block;
-  }
+      /* ============ CUSTOM DROPDOWN STYLE ============ */
+      .custom-dropdown {
+        position: relative;
+        display: inline-block;
+      }
 
-  /* Tombol Pemicu */
-  .dropdown-trigger {
-    background: var(--bg-elev-2);
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    font-size: 12px;
-    min-width: 190px;
-    font-family: var(--sans);
-    transition: all 0.15s ease;
-    user-select: none;
-  }
+      /* Tombol Pemicu */
+      .dropdown-trigger {
+        background: var(--bg-elev-2);
+        color: var(--text-dim);
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12px;
+        min-width: 190px;
+        font-family: var(--sans);
+        transition: all 0.15s ease;
+        user-select: none;
+      }
 
-  .dropdown-trigger:hover {
-    border-color: var(--text-faint);
-    color: var(--text);
-  }
+      .dropdown-trigger:hover {
+        border-color: var(--text-faint);
+        color: var(--text);
+      }
 
-  .dropdown-trigger strong {
-    color: var(--text);
-    font-weight: 600;
-  }
+      .dropdown-trigger strong {
+        color: var(--text);
+        font-weight: 600;
+      }
 
-  .chevron-icon {
-    transition: transform 0.2s ease;
-    color: var(--text-faint);
-    flex-shrink: 0;
-  }
+      .chevron-icon {
+        transition: transform 0.2s ease;
+        color: var(--text-faint);
+        flex-shrink: 0;
+      }
 
-  /* Menu Pilihan (Mengambang Ke Atas) */
-  .dropdown-menu {
-    position: absolute;
-    bottom: calc(100% + 8px); /* Mengambang di atas tombol */
-    left: 0;
-    width: 100%;
-    min-width: 260px;
-    background: rgba(14, 17, 20, 0.96);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    display: none;
-    z-index: 100;
-    overflow: hidden;
-    padding: 6px 0;
-  }
+      /* Menu Pilihan (Mengambang Ke Atas) */
+      .dropdown-menu {
+        position: absolute;
+        bottom: calc(100% + 8px); /* Mengambang di atas tombol */
+        left: 0;
+        width: 100%;
+        min-width: 260px;
+        background: rgba(14, 17, 20, 0.96);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        display: none;
+        z-index: 100;
+        overflow: hidden;
+        padding: 6px 0;
+      }
 
-  /* Status Aktif */
-  .custom-dropdown.open .dropdown-menu {
-    display: block;
-  }
+      /* Status Aktif */
+      .custom-dropdown.open .dropdown-menu {
+        display: block;
+      }
 
-  .custom-dropdown.open .chevron-icon {
-    transform: rotate(180deg);
-  }
+      .custom-dropdown.open .chevron-icon {
+        transform: rotate(180deg);
+      }
 
-  /* Label Kategori / Grup */
-  .group-title {
-    padding: 6px 12px 2px 12px;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-    margin-bottom: 4px;
-  }
+      /* Label Kategori / Grup */
+      .group-title {
+        padding: 6px 12px 2px 12px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        margin-bottom: 4px;
+      }
 
-  /* Item Opsi */
-  .dropdown-item {
-    padding: 8px 14px;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: background 0.1s ease, color 0.1s ease;
-  }
+      /* Item Opsi */
+      .dropdown-item {
+        padding: 8px 14px;
+        font-size: 12.5px;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition:
+          background 0.1s ease,
+          color 0.1s ease;
+      }
 
-  .dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
-  }
+      .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
 
-  .dropdown-item.active {
-    background: var(--accent);
-    color: #000000;
-    font-weight: 600;
-  }
+      .dropdown-item.active {
+        background: var(--accent);
+        color: #000000;
+        font-weight: 600;
+      }
 
-  /* Send Button */
-  .send-btn{
-    width:34px; height:34px; border-radius:var(--radius); border:none;
-    background: var(--accent); color:#000; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition: opacity .15s ease;
-    flex-shrink:0;
-  }
-  .send-btn:hover:not(:disabled){ opacity: 0.85; }
-  .send-btn:disabled{ background:#1c2025; color:#4a525a; cursor:not-allowed; }
-  .send-btn svg{ width:15px; height:15px; }
+      /* Send Button */
+      .send-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: var(--radius);
+        border: none;
+        background: var(--accent);
+        color: #000;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.15s ease;
+        flex-shrink: 0;
+      }
+      .send-btn:hover:not(:disabled) {
+        opacity: 0.85;
+      }
+      .send-btn:disabled {
+        background: #1c2025;
+        color: #4a525a;
+        cursor: not-allowed;
+      }
+      .send-btn svg {
+        width: 15px;
+        height: 15px;
+      }
 
-  .hint-link{
-    margin-top:24px; color: var(--text-faint); font-size:12px;
-    display:flex; align-items:center; gap:6px; cursor:pointer;
-  }
-  .hint-link:hover{ color: var(--text-dim); }
+      .hint-link {
+        margin-top: 24px;
+        color: var(--text-faint);
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .hint-link:hover {
+        color: var(--text-dim);
+      }
 
-  /* ============ RESULT AREA ============ */
-  .result-wrap{
-    width:100%; max-width: 720px; margin-top: 28px;
-    display:none;
-  }
-  .result-wrap.show{ display:block; }
+      /* ============ RESULT AREA ============ */
+      .result-wrap {
+        width: 100%;
+        max-width: 720px;
+        margin-top: 28px;
+        display: none;
+      }
+      .result-wrap.show {
+        display: block;
+      }
 
-  .stage-track{
-    display:flex; align-items:center; gap:10px; margin-bottom:22px;
-    font-size:12px; color: var(--text-faint); justify-content:center;
-  }
-  .stage{ display:flex; align-items:center; gap:7px; }
-  .stage .dot{ width:5px; height:5px; border-radius:50%; background: var(--border); }
-  .stage.active .dot{ background: var(--accent); }
-  .stage.active{ color: var(--text); }
-  .stage.done .dot{ background:#00ff66; }
-  .stage-line{ width:24px; height:1px; background: var(--border); }
+      .stage-track {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        font-size: 12px;
+        color: var(--text-faint);
+        justify-content: center;
+      }
+      .stage {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .stage .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--border);
+      }
+      .stage.active .dot {
+        background: var(--accent);
+      }
+      .stage.active {
+        color: var(--text);
+      }
+      .stage.done .dot {
+        background: #00ff66;
+      }
+      .stage-line {
+        width: 24px;
+        height: 1px;
+        background: var(--border);
+      }
 
-  .result-card{
-    background: var(--bg-elev);
-    border:1px solid var(--border);
-    border-radius: var(--radius);
-    overflow:hidden;
-  }
-  .result-header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 14px 20px; border-bottom:1px solid var(--border-soft);
-  }
-  .result-title{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; }
-  .result-title .icn{
-    font-family: var(--mono); color:var(--text-dim);
-  }
-  .result-actions{ display:flex; gap:8px; }
-  .action-btn{
-    background: var(--bg-elev-2); border:1px solid var(--border); color: var(--text-dim);
-    font-size:12px; padding:6px 12px; border-radius:var(--radius); cursor:pointer;
-    display:flex; align-items:center; gap:6px; font-family: var(--sans);
-  }
-  .action-btn:hover{ border-color:var(--text-faint); color: var(--text); }
-  .action-btn.copied{ border-color:#00ff66; color:#00ff66; }
+      .result-card {
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .result-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .result-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .result-title .icn {
+        font-family: var(--mono);
+        color: var(--text-dim);
+      }
+      .result-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .action-btn {
+        background: var(--bg-elev-2);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--sans);
+      }
+      .action-btn:hover {
+        border-color: var(--text-faint);
+        color: var(--text);
+      }
+      .action-btn.copied {
+        border-color: #00ff66;
+        color: #00ff66;
+      }
 
-  .result-body{
-    padding: 20px; max-height: 480px; overflow-y:auto;
-    font-family: var(--mono); font-size: 13px; line-height:1.7;
-    color: #cbd5e1; white-space: pre-wrap; word-break: break-word;
-  }
-  .result-body::-webkit-scrollbar{ width:6px; }
-  .result-body::-webkit-scrollbar-thumb{ background: var(--border); }
+      .result-body {
+        padding: 20px;
+        max-height: 480px;
+        overflow-y: auto;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.7;
+        color: #cbd5e1;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .result-body::-webkit-scrollbar {
+        width: 6px;
+      }
+      .result-body::-webkit-scrollbar-thumb {
+        background: var(--border);
+      }
 
-  /* loading state */
-  .loading-block{
-    display:flex; flex-direction:column; align-items:center; gap:16px;
-    padding: 48px 20px; color: var(--text-dim); font-size:13px;
-  }
-  .spinner{
-    width:24px; height:24px; border-radius:50%;
-    border:2px solid var(--border); border-top-color: var(--accent);
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin{ to{ transform: rotate(360deg); } }
+      /* loading state */
+      .loading-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 48px 20px;
+        color: var(--text-dim);
+        font-size: 13px;
+      }
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        border-top-color: var(--accent);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-  .error-block{
-    padding: 16px 20px; color:#ff6b6b; font-size:13px;
-    background: rgba(255,107,107,0.03); border-top:1px solid rgba(255,107,107,0.15);
-  }
+      .error-block {
+        padding: 16px 20px;
+        color: #ff6b6b;
+        font-size: 13px;
+        background: rgba(255, 107, 107, 0.03);
+        border-top: 1px solid rgba(255, 107, 107, 0.15);
+      }
 
-  /* history list */
-  .history-list{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
-  .history-item{
-    background: var(--bg-elev); border:1px solid var(--border-soft);
-    border-radius:var(--radius); padding:12px 16px; cursor:pointer;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .history-item:hover{ border-color: var(--border); }
-  .history-item .ht-title{ font-size:13px; color: var(--text); }
-  .history-item .ht-meta{ font-size:11px; color: var(--text-faint); }
+      /* history list */
+      .history-list {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .history-item {
+        background: var(--bg-elev);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .history-item:hover {
+        border-color: var(--border);
+      }
+      .history-item .ht-title {
+        font-size: 13px;
+        color: var(--text);
+      }
+      .history-item .ht-meta {
+        font-size: 11px;
+        color: var(--text-faint);
+      }
 
-  /* ============ FOOTER ============ */
-  footer{
-    text-align:center; padding: 24px; color: var(--text-faint); font-size:11px;
-    border-top: 1px solid var(--border-soft);
-  }
+      /* ============ FOOTER ============ */
+      footer {
+        text-align: center;
+        padding: 24px;
+        color: var(--text-faint);
+        font-size: 11px;
+        border-top: 1px solid var(--border-soft);
+      }
 
-  /* ============ MODAL (API KEY) ============ */
-  .modal-overlay{
-    position:fixed; inset:0; background: rgba(0,0,0,0.9);
-    backdrop-filter: blur(4px);
-    display:none; align-items:center; justify-content:center; z-index:50;
-    padding:20px;
-  }
-  .modal-overlay.show{ display:flex; }
-  .modal{
-    background: var(--bg-elev); border:1px solid var(--border);
-    border-radius: var(--radius); width:100%; max-width:460px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .modal h3{ font-size:16px; font-weight:700; color: #ffffff; }
-  .modal p.desc{ color: var(--text-dim); font-size:13px; line-height: 1.5; }
-  
-  .provider-select-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    position: relative;
-  }
-  .provider-select-wrap label {
-    font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px;
-  }
+      /* ============ MODAL (API KEY) ============ */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        padding: 20px;
+      }
+      .modal-overlay.show {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 460px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .modal h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+      .modal p.desc {
+        color: var(--text-dim);
+        font-size: 13px;
+        line-height: 1.5;
+      }
 
-  /* Redesain Dropdown Modal ke Bawah */
-  .modal .custom-dropdown {
-    width: 100%;
-  }
-  .modal .dropdown-trigger {
-    width: 100%;
-    min-width: 100%;
-    padding: 10px 12px;
-    background: var(--bg-elev-2);
-    font-size: 13px;
-  }
-  .modal .dropdown-menu {
-    bottom: auto;
-    top: calc(100% + 6px); /* Mengambang ke bawah pada modal */
-    width: 100%;
-    min-width: 100%;
-    background: var(--bg-elev-2);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8);
-  }
+      .provider-select-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: relative;
+      }
+      .provider-select-wrap label {
+        font-size: 11px;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-  .modal input{
-    width:100%; background: var(--bg-elev-2); border:1px solid var(--border);
-    color: var(--text); padding:10px 12px; border-radius:var(--radius); font-size:13px;
-    font-family: var(--mono); outline:none;
-  }
-  .modal input:focus{ border-color: var(--text-faint); }
+      /* Redesain Dropdown Modal ke Bawah */
+      .modal .custom-dropdown {
+        width: 100%;
+      }
+      .modal .dropdown-trigger {
+        width: 100%;
+        min-width: 100%;
+        padding: 10px 12px;
+        background: var(--bg-elev-2);
+        font-size: 13px;
+      }
+      .modal .dropdown-menu {
+        bottom: auto;
+        top: calc(100% + 6px); /* Mengambang ke bawah pada modal */
+        width: 100%;
+        min-width: 100%;
+        background: var(--bg-elev-2);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8);
+      }
 
-  /* ============ TUTORIAL SECTION IN MODAL ============ */
-  .tutorial-box {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    font-size: 12px;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .tutorial-box strong {
-    color: var(--text);
-  }
-  .tutorial-box ol {
-    margin-left: 18px;
-    margin-top: 6px;
-  }
-  .tutorial-box li {
-    margin-bottom: 4px;
-  }
-  .tutorial-box a {
-    color: var(--text);
-    text-decoration: underline;
-    font-weight: 500;
-  }
-  .tutorial-box a:hover {
-    color: #ffffff;
-  }
+      .modal input {
+        width: 100%;
+        background: var(--bg-elev-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        font-family: var(--mono);
+        outline: none;
+      }
+      .modal input:focus {
+        border-color: var(--text-faint);
+      }
 
-  .modal-btn-row{ display:flex; gap:10px; margin-top: 4px; }
-  .modal-btn{
-    flex:1; padding:10px; border-radius:var(--radius); border:none; cursor:pointer;
-    font-size:13px; font-weight:600; font-family: var(--sans);
-  }
-  .modal-btn.primary{ background: var(--accent); color:#000000; }
-  .modal-btn.ghost{ background: transparent; border:1px solid var(--border); color: var(--text-dim); }
-  .modal-btn.ghost:hover{ color: var(--text); }
+      /* ============ TUTORIAL SECTION IN MODAL ============ */
+      .tutorial-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-dim);
+      }
+      .tutorial-box strong {
+        color: var(--text);
+      }
+      .tutorial-box ol {
+        margin-left: 18px;
+        margin-top: 6px;
+      }
+      .tutorial-box li {
+        margin-bottom: 4px;
+      }
+      .tutorial-box a {
+        color: var(--text);
+        text-decoration: underline;
+        font-weight: 500;
+      }
+      .tutorial-box a:hover {
+        color: #ffffff;
+      }
 
-  @media (max-width: 640px){
-    header{ padding:16px 20px; }
-    .header-stats{ display:none; }
-    h1{ font-size:30px; }
-    main{ padding: 48px 16px 30px; }
-    .composer{ padding:16px; }
-  }
-</style>
-</head>
-<body>
-<div class="app">
+      .modal-btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .modal-btn {
+        flex: 1;
+        padding: 10px;
+        border-radius: var(--radius);
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: var(--sans);
+      }
+      .modal-btn.primary {
+        background: var(--accent);
+        color: #000000;
+      }
+      .modal-btn.ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+      }
+      .modal-btn.ghost:hover {
+        color: var(--text);
+      }
 
-  <header>
-    <div class="logo">
-      <div class="mark">P</div>
-      <span>PROMPTFORGE</span>
-    </div>
-    <div class="header-stats">
-      <div class="stat"><span class="dot-live"></span> CLIENT-SIDE PROMPT ENGINE</div>
-      <div class="stat">PROVIDER: <strong id="currentProviderLabel">GEMINI</strong></div>
-    </div>
-    <div class="header-right">
-      <button class="btn-key" id="keyBtn">
-        <span class="key-dot" id="keyDot"></span>
-        <span id="keyBtnLabel">SET API KEYS</span>
-      </button>
-    </div>
-  </header>
+      @media (max-width: 640px) {
+        header {
+          padding: 16px 20px;
+        }
+        .header-stats {
+          display: none;
+        }
+        h1 {
+          font-size: 30px;
+        }
+        main {
+          padding: 48px 16px 30px;
+        }
+        .composer {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="logo">
+          <div class="mark">P</div>
+          <span>PROMPTFORGE</span>
+        </div>
+        <div class="header-stats">
+          <div class="stat">
+            <span class="dot-live"></span> CLIENT-SIDE PROMPT ENGINE
+          </div>
+          <div class="stat">
+            PROVIDER: <strong id="currentProviderLabel">GEMINI</strong>
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="btn-key" id="keyBtn">
+            <span class="key-dot" id="keyDot"></span>
+            <span id="keyBtnLabel">SET API KEYS</span>
+          </button>
+        </div>
+      </header>
 
-  <main>
-    <div class="badge">PROMPT ARCHITECTURE ENVIRONMENT</div>
-    <h1>Ubah Ide Kasar Jadi Prompt AI Siap Pakai</h1>
-    <p class="sub-heading">
-      Tulis deskripsi ide dalam bahasa santai. PromptForge akan menyusunnya menjadi format instruksi sistematis menggunakan model bahasa pilihanmu.
-    </p>
+      <main>
+        <div class="badge">PROMPT ARCHITECTURE ENVIRONMENT</div>
+        <h1>Ubah Ide Kasar Jadi Prompt AI Siap Pakai</h1>
+        <p class="sub-heading">
+          Tulis deskripsi ide dalam bahasa santai. PromptForge akan menyusunnya
+          menjadi format instruksi sistematis menggunakan model bahasa
+          pilihanmu.
+        </p>
 
-    <div class="composer">
-      <textarea id="ideaInput" placeholder="Tulis instruksi sederhana di sini... (contoh: Buatkan sistem kasir modular sederhana berbasis Go dengan arsitektur clean)"></textarea>
-      <div class="composer-footer">
-        <div class="composer-left">
-          
-          <!-- Dropdown Model Kustom -->
-          <div class="custom-dropdown" id="dropdownModel">
-            <button class="dropdown-trigger">
-              <span>MODEL: <strong class="selected-value">Gemini 3.5 Flash</strong></span>
-              <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        <div class="composer">
+          <textarea
+            id="ideaInput"
+            placeholder="Tulis instruksi sederhana di sini... (contoh: Buatkan sistem kasir modular sederhana berbasis Go dengan arsitektur clean)"
+          ></textarea>
+          <div class="composer-footer">
+            <div class="composer-left">
+              <!-- Dropdown Model Kustom -->
+              <div class="custom-dropdown" id="dropdownModel">
+                <button class="dropdown-trigger">
+                  <span
+                    >MODEL:
+                    <strong class="selected-value"
+                      >Gemini 3.5 Flash</strong
+                    ></span
+                  >
+                  <svg
+                    class="chevron-icon"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="dropdown-menu">
+                  <div class="dropdown-group">
+                    <div class="group-title">Google Gemini</div>
+                    <div
+                      class="dropdown-item active"
+                      data-value="gemini/gemini-3.5-flash"
+                    >
+                      Gemini 3.5 Flash
+                    </div>
+                    <div
+                      class="dropdown-item"
+                      data-value="gemini/gemini-3.1-flash-lite"
+                    >
+                      Gemini 3.1 Flash-Lite
+                    </div>
+                  </div>
+                  <div class="dropdown-group">
+                    <div class="group-title">Groq Cloud</div>
+                    <div
+                      class="dropdown-item"
+                      data-value="groq/llama-3.3-70b-specdec"
+                    >
+                      Llama 3.3 70B
+                    </div>
+                    <div
+                      class="dropdown-item"
+                      data-value="groq/deepseek-r1-distill-llama-70b"
+                    >
+                      DeepSeek R1 (Llama 70B)
+                    </div>
+                  </div>
+                  <div class="dropdown-group">
+                    <div class="group-title">OpenAI API</div>
+                    <div class="dropdown-item" data-value="openai/gpt-4o">
+                      GPT-4o
+                    </div>
+                    <div class="dropdown-item" data-value="openai/o3-mini">
+                      o3-mini
+                    </div>
+                    <div class="dropdown-item" data-value="openai/o1">o1</div>
+                  </div>
+                  <div class="dropdown-group">
+                    <div class="group-title">Anthropic API</div>
+                    <div
+                      class="dropdown-item"
+                      data-value="anthropic/claude-3-7-sonnet-latest"
+                    >
+                      Claude 3.7 Sonnet
+                    </div>
+                    <div
+                      class="dropdown-item"
+                      data-value="anthropic/claude-3-5-haiku-latest"
+                    >
+                      Claude 3.5 Haiku
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dropdown Mode Kustom -->
+              <div class="custom-dropdown" id="dropdownMode">
+                <button class="dropdown-trigger">
+                  <span
+                    >MODE:
+                    <strong class="selected-value"
+                      >AI Coding Agent</strong
+                    ></span
+                  >
+                  <svg
+                    class="chevron-icon"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="dropdown-menu">
+                  <div class="dropdown-group">
+                    <div class="dropdown-item active" data-value="coding">
+                      AI Coding Agent
+                    </div>
+                    <div class="dropdown-item" data-value="image">
+                      AI Image/Video Generation
+                    </div>
+                    <div class="dropdown-item" data-value="writing">
+                      Riset & Penulisan Pro
+                    </div>
+                    <div class="dropdown-item" data-value="uiux">
+                      UI/UX Design Prototyping
+                    </div>
+                    <div class="dropdown-item" data-value="datascience">
+                      Data Science & Analytics
+                    </div>
+                    <div class="dropdown-item" data-value="general">
+                      Umum / Serbaguna
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="send-btn" id="generateBtn" title="Generate prompt">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
             </button>
-            <div class="dropdown-menu">
-              <div class="dropdown-group">
-                <div class="group-title">Google Gemini</div>
-                <div class="dropdown-item active" data-value="gemini/gemini-3.5-flash">Gemini 3.5 Flash</div>
-                <div class="dropdown-item" data-value="gemini/gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite</div>
-              </div>
-              <div class="dropdown-group">
-                <div class="group-title">Groq Cloud</div>
-                <div class="dropdown-item" data-value="groq/llama-3.3-70b-specdec">Llama 3.3 70B</div>
-                <div class="dropdown-item" data-value="groq/deepseek-r1-distill-llama-70b">DeepSeek R1 (Llama 70B)</div>
-              </div>
-              <div class="dropdown-group">
-                <div class="group-title">OpenAI API</div>
-                <div class="dropdown-item" data-value="openai/gpt-4o">GPT-4o</div>
-                <div class="dropdown-item" data-value="openai/o3-mini">o3-mini</div>
-                <div class="dropdown-item" data-value="openai/o1">o1</div>
-              </div>
-              <div class="dropdown-group">
-                <div class="group-title">Anthropic API</div>
-                <div class="dropdown-item" data-value="anthropic/claude-3-7-sonnet-latest">Claude 3.7 Sonnet</div>
-                <div class="dropdown-item" data-value="anthropic/claude-3-5-haiku-latest">Claude 3.5 Haiku</div>
-              </div>
+          </div>
+        </div>
+
+        <div class="hint-link" id="historyToggle">
+          <span>🕓</span> LIHAT RIWAYAT SEBELUMNYA
+        </div>
+
+        <div class="result-wrap" id="resultWrap">
+          <div class="stage-track" id="stageTrack">
+            <div class="stage" data-stage="1">
+              <span class="dot"></span> Struktrisasi
+            </div>
+            <div class="stage-line"></div>
+            <div class="stage" data-stage="2">
+              <span class="dot"></span> Sintesis
+            </div>
+            <div class="stage-line"></div>
+            <div class="stage" data-stage="3">
+              <span class="dot"></span> Finalisasi
             </div>
           </div>
 
-          <!-- Dropdown Mode Kustom -->
-          <div class="custom-dropdown" id="dropdownMode">
-            <button class="dropdown-trigger">
-              <span>MODE: <strong class="selected-value">AI Coding Agent</strong></span>
-              <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="dropdown-menu">
-              <div class="dropdown-group">
-                <div class="dropdown-item active" data-value="coding">AI Coding Agent</div>
-                <div class="dropdown-item" data-value="image">AI Image/Video Generation</div>
-                <div class="dropdown-item" data-value="writing">Riset & Penulisan Pro</div>
-                <div class="dropdown-item" data-value="uiux">UI/UX Design Prototyping</div>
-                <div class="dropdown-item" data-value="datascience">Data Science & Analytics</div>
-                <div class="dropdown-item" data-value="general">Umum / Serbaguna</div>
+          <div class="result-card">
+            <div class="result-header">
+              <div class="result-title">
+                <span class="icn">></span>
+                <span id="resultLabel">OUTPUT</span>
               </div>
+              <div class="result-actions">
+                <button class="action-btn" id="copyBtn">📋 Salin</button>
+                <button class="action-btn" id="downloadBtn">⬇ Unduh .md</button>
+              </div>
+            </div>
+            <div id="resultBody">
+              <div
+                class="loading-block"
+                style="display: none"
+                id="loadingBlock"
+              >
+                <div class="spinner"></div>
+                <span id="loadingText">Processing model inference...</span>
+              </div>
+              <div
+                class="result-body"
+                id="resultText"
+                style="display: none"
+              ></div>
+              <div
+                class="error-block"
+                id="errorBlock"
+                style="display: none"
+              ></div>
             </div>
           </div>
 
+          <div class="history-list" id="historyList"></div>
         </div>
-        <button class="send-btn" id="generateBtn" title="Generate prompt">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-        </button>
-      </div>
+      </main>
+
+      <footer>
+        PROMPTFORGE // CLIENT-SIDE ONLY. DATA IS PERSISTED LOCALLY IN YOUR WEB
+        STORAGE.
+      </footer>
     </div>
 
-    <div class="hint-link" id="historyToggle">
-      <span>🕓</span> LIHAT RIWAYAT SEBELUMNYA
-    </div>
+    <!-- API KEY MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <h3>KONFIGURASI API KEY</h3>
+        <p class="desc">
+          Data tersimpan lokal dan langsung berkomunikasi aman ke endpoint
+          provider terkait.
+        </p>
 
-    <div class="result-wrap" id="resultWrap">
-      <div class="stage-track" id="stageTrack">
-        <div class="stage" data-stage="1"><span class="dot"></span> Struktrisasi</div>
-        <div class="stage-line"></div>
-        <div class="stage" data-stage="2"><span class="dot"></span> Sintesis</div>
-        <div class="stage-line"></div>
-        <div class="stage" data-stage="3"><span class="dot"></span> Finalisasi</div>
-      </div>
+        <div class="provider-select-wrap">
+          <label>Pilih Provider:</label>
 
-      <div class="result-card">
-        <div class="result-header">
-          <div class="result-title">
-            <span class="icn">></span>
-            <span id="resultLabel">OUTPUT</span>
+          <!-- Custom Dropdown untuk Modal -->
+          <div class="custom-dropdown" id="dropdownProvider">
+            <button class="dropdown-trigger">
+              <span
+                >Key:
+                <strong class="selected-value">Google Gemini</strong></span
+              >
+              <svg
+                class="chevron-icon"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-item active" data-value="gemini">
+                Google Gemini Key
+              </div>
+              <div class="dropdown-item" data-value="groq">Groq Cloud Key</div>
+              <div class="dropdown-item" data-value="openai">
+                OpenAI API Key
+              </div>
+              <div class="dropdown-item" data-value="anthropic">
+                Anthropic API Key
+              </div>
+            </div>
           </div>
-          <div class="result-actions">
-            <button class="action-btn" id="copyBtn">📋 Salin</button>
-            <button class="action-btn" id="downloadBtn">⬇ Unduh .md</button>
-          </div>
         </div>
-        <div id="resultBody">
-          <div class="loading-block" style="display:none" id="loadingBlock">
-            <div class="spinner"></div>
-            <span id="loadingText">Processing model inference...</span>
-          </div>
-          <div class="result-body" id="resultText" style="display:none"></div>
-          <div class="error-block" id="errorBlock" style="display:none"></div>
+
+        <input
+          type="password"
+          id="apiKeyInput"
+          placeholder="Masukkan API Key..."
+        />
+
+        <!-- Bagian Panduan / Tutorial Dinamis -->
+        <div class="tutorial-box" id="tutorialBox">
+          <!-- Diisi oleh Javascript berdasarkan provider yang dipilih -->
         </div>
-      </div>
 
-      <div class="history-list" id="historyList"></div>
-    </div>
-  </main>
-
-  <footer>PROMPTFORGE // CLIENT-SIDE ONLY. DATA IS PERSISTED LOCALLY IN YOUR WEB STORAGE.</footer>
-</div>
-
-<!-- API KEY MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h3>KONFIGURASI API KEY</h3>
-    <p class="desc">Data tersimpan lokal dan langsung berkomunikasi aman ke endpoint provider terkait.</p>
-    
-    <div class="provider-select-wrap">
-      <label>Pilih Provider:</label>
-      
-      <!-- Custom Dropdown untuk Modal (Ganti select bawaan) -->
-      <div class="custom-dropdown" id="dropdownProvider">
-        <button class="dropdown-trigger">
-          <span>Key: <strong class="selected-value">Google Gemini</strong></span>
-          <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="dropdown-menu">
-          <div class="dropdown-item active" data-value="gemini">Google Gemini Key</div>
-          <div class="dropdown-item" data-value="groq">Groq Cloud Key</div>
-          <div class="dropdown-item" data-value="openai">OpenAI API Key</div>
-          <div class="dropdown-item" data-value="anthropic">Anthropic API Key</div>
+        <div class="modal-btn-row">
+          <button class="modal-btn ghost" id="modalCancel">Batal</button>
+          <button class="modal-btn primary" id="modalSave">Simpan Key</button>
         </div>
       </div>
     </div>
 
-    <input type="password" id="apiKeyInput" placeholder="Masukkan API Key...">
-    
-    <!-- Bagian Panduan / Tutorial Dinamis -->
-    <div class="tutorial-box" id="tutorialBox">
-      <!-- Diisi oleh Javascript berdasarkan provider yang dipilih -->
-    </div>
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
 
-    <div class="modal-btn-row">
-      <button class="modal-btn ghost" id="modalCancel">Batal</button>
-      <button class="modal-btn primary" id="modalSave">Simpan Key</button>
-    </div>
-  </div>
-</div>
+        const keyBtn = $("keyBtn"),
+          keyDot = $("keyDot"),
+          keyBtnLabel = $("keyBtnLabel");
+        const modalOverlay = $("modalOverlay"),
+          apiKeyInput = $("apiKeyInput");
+        const modalSave = $("modalSave"),
+          modalCancel = $("modalCancel");
+        const ideaInput = $("ideaInput");
+        const generateBtn = $("generateBtn");
+        const resultWrap = $("resultWrap"),
+          stageTrack = $("stageTrack");
+        const loadingBlock = $("loadingBlock"),
+          loadingText = $("loadingText");
+        const resultText = $("resultText"),
+          errorBlock = $("errorBlock");
+        const copyBtn = $("copyBtn"),
+          downloadBtn = $("downloadBtn");
+        const historyToggle = $("historyToggle"),
+          historyList = $("historyList");
+        const currentProviderLabel = $("currentProviderLabel");
+        const tutorialBox = $("tutorialBox");
 
-<script>
-(function(){
-  const $ = (id) => document.getElementById(id);
+        // State global
+        let activeModelValue = "gemini/gemini-3.5-flash";
+        let activeModeValue = "coding";
+        let activeProviderModal = "gemini";
 
-  const keyBtn = $('keyBtn'), keyDot = $('keyDot'), keyBtnLabel = $('keyBtnLabel');
-  const modalOverlay = $('modalOverlay'), apiKeyInput = $('apiKeyInput');
-  const modalSave = $('modalSave'), modalCancel = $('modalCancel');
-  const ideaInput = $('ideaInput');
-  const generateBtn = $('generateBtn');
-  const resultWrap = $('resultWrap'), stageTrack = $('stageTrack');
-  const loadingBlock = $('loadingBlock'), loadingText = $('loadingText');
-  const resultText = $('resultText'), errorBlock = $('errorBlock');
-  const copyBtn = $('copyBtn'), downloadBtn = $('downloadBtn');
-  const historyToggle = $('historyToggle'), historyList = $('historyList');
-  const currentProviderLabel = $('currentProviderLabel');
-  const tutorialBox = $('tutorialBox');
+        const STORAGE_KEYS = {
+          gemini: "promptforge_key_gemini",
+          groq: "promptforge_key_groq",
+          openai: "promptforge_key_openai",
+          anthropic: "promptforge_key_anthropic",
+        };
+        const HISTORY_KEY = "promptforge_history";
 
-  // State global - Diubah ke gemini-3.5-flash sebagai default awal
-  let activeModelValue = 'gemini/gemini-3.5-flash';
-  let activeModeValue = 'coding';
-  let activeProviderModal = 'gemini'; // Default provider di modal
-
-  const STORAGE_KEYS = {
-    gemini: 'promptforge_key_gemini',
-    groq: 'promptforge_key_groq',
-    openai: 'promptforge_key_openai',
-    anthropic: 'promptforge_key_anthropic'
-  };
-  const HISTORY_KEY = 'promptforge_history';
-
-  // Kamus Tutorial API Key
-  const TUTORIALS = {
-    gemini: `
+        const TUTORIALS = {
+          gemini: `
       <strong>Cara Mendapatkan Google Gemini API Key:</strong>
       <ol>
         <li>Buka halaman <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>.</li>
         <li>Masuk menggunakan akun Google Anda.</li>
         <li>Klik tombol <strong>"Get API Key"</strong> di pojok kiri atas.</li>
-        <li>Pilih <strong>"Create API Key"</strong> (pilih project baru atau yang sudah ada).</li>
+        <li>Pilih <strong>"Create API Key"</strong>.</li>
         <li>Salin kode API Key yang didapat lalu tempelkan di atas.</li>
       </ol>
     `,
-    groq: `
+          groq: `
       <strong>Cara Mendapatkan Groq Cloud API Key:</strong>
       <ol>
         <li>Kunjungi halaman <a href="https://console.groq.com/" target="_blank">Groq Console</a>.</li>
-        <li>Lakukan login atau registrasi akun baru.</li>
         <li>Masuk ke menu sidebar kiri dan pilih <strong>"API Keys"</strong>.</li>
         <li>Klik tombol <strong>"Create API Key"</strong>.</li>
-        <li>Beri nama kunci Anda, lalu salin kodenya ke kolom di atas.</li>
+        <li>Salin kodenya ke kolom di atas.</li>
       </ol>
     `,
-    openai: `
+          openai: `
       <strong>Cara Mendapatkan OpenAI API Key:</strong>
       <ol>
         <li>Buka portal <a href="https://platform.openai.com/" target="_blank">OpenAI Platform</a>.</li>
-        <li>Masuk ke dashboard akun Anda (pastikan memiliki kredit saldo aktif).</li>
         <li>Akses menu <strong>"API Keys"</strong> dari panel navigasi.</li>
         <li>Klik <strong>"Create new secret key"</strong>.</li>
         <li>Salin kunci rahasia yang muncul ke kolom input di atas.</li>
       </ol>
     `,
-    anthropic: `
+          anthropic: `
       <strong>Cara Mendapatkan Anthropic API Key:</strong>
       <ol>
         <li>Masuk ke <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>.</li>
-        <li>Buat akun atau login, lalu pastikan Anda memiliki billing aktif.</li>
         <li>Akses tab menu <strong>"API Keys"</strong>.</li>
         <li>Klik tombol <strong>"Create Key"</strong>.</li>
         <li>Salin key berkepala <code>sk-ant-...</code> dan simpan ke form di atas.</li>
       </ol>
-    `
-  };
+    `,
+        };
 
-  function getActiveProvider() {
-    return activeModelValue.split('/')[0];
-  }
-
-  function getKey(provider){ return localStorage.getItem(STORAGE_KEYS[provider]) || ''; }
-  function setKey(provider, k){ localStorage.setItem(STORAGE_KEYS[provider], k); refreshKeyUI(); }
-  
-  function refreshKeyUI(){
-    const currentProvider = getActiveProvider();
-    currentProviderLabel.textContent = currentProvider.toUpperCase();
-    const hasKey = !!getKey(currentProvider);
-    keyDot.classList.toggle('set', hasKey);
-    keyBtnLabel.textContent = hasKey ? `${currentProvider.toUpperCase()} ACTIVE` : 'SET API KEY';
-  }
-
-  // Update tutorial dan input key berdasarkan provider modal aktif
-  function updateModalProviderContent(provider) {
-    activeProviderModal = provider;
-    apiKeyInput.value = getKey(provider);
-    apiKeyInput.placeholder = `Masukkan API Key untuk ${provider.toUpperCase()}...`;
-    tutorialBox.innerHTML = TUTORIALS[provider] || 'Panduan tidak ditemukan.';
-  }
-
-  // ============ LOGIKA INTERAKSI CUSTOM DROPDOWN (Semua Dropdown) ============
-  const dropdowns = document.querySelectorAll('.custom-dropdown');
-  dropdowns.forEach(dropdown => {
-    const trigger = dropdown.querySelector('.dropdown-trigger');
-    const selectedValueSpan = dropdown.querySelector('.selected-value');
-    const items = dropdown.querySelectorAll('.dropdown-item');
-
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      // Tutup dropdown lain saat yang satu dibuka
-      dropdowns.forEach(other => {
-        if (other !== dropdown) other.classList.remove('open');
-      });
-      dropdown.classList.toggle('open');
-    });
-
-    items.forEach(item => {
-      item.addEventListener('click', () => {
-        dropdown.querySelector('.dropdown-item.active')?.classList.remove('active');
-        item.classList.add('active');
-        
-        const rawValue = item.getAttribute('data-value');
-        const textLabel = item.textContent;
-
-        if (dropdown.id === 'dropdownModel') {
-          activeModelValue = rawValue;
-          selectedValueSpan.innerHTML = textLabel;
-          refreshKeyUI();
-        } else if (dropdown.id === 'dropdownMode') {
-          activeModeValue = rawValue;
-          selectedValueSpan.innerHTML = textLabel;
-        } else if (dropdown.id === 'dropdownProvider') {
-          selectedValueSpan.innerHTML = textLabel;
-          updateModalProviderContent(rawValue);
+        function getActiveProvider() {
+          return activeModelValue.split("/")[0];
         }
 
-        dropdown.classList.remove('open');
-      });
-    });
-  });
+        function getKey(provider) {
+          return localStorage.getItem(STORAGE_KEYS[provider]) || "";
+        }
+        function setKey(provider, k) {
+          localStorage.setItem(STORAGE_KEYS[provider], k);
+          refreshKeyUI();
+        }
 
-  // Klik di luar dropdown untuk menutup
-  document.addEventListener('click', () => {
-    dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
-  });
+        function refreshKeyUI() {
+          const currentProvider = getActiveProvider();
+          currentProviderLabel.textContent = currentProvider.toUpperCase();
+          const hasKey = !!getKey(currentProvider);
+          keyDot.classList.toggle("set", hasKey);
+          keyBtnLabel.textContent = hasKey
+            ? `${currentProvider.toUpperCase()} ACTIVE`
+            : "SET API KEY";
+        }
 
-  refreshKeyUI();
+        function updateModalProviderContent(provider) {
+          activeProviderModal = provider;
+          apiKeyInput.value = getKey(provider);
+          apiKeyInput.placeholder = `Masukkan API Key untuk ${provider.toUpperCase()}...`;
+          tutorialBox.innerHTML =
+            TUTORIALS[provider] || "Panduan tidak ditemukan.";
+        }
 
-  // Buka Modal API Key
-  keyBtn.addEventListener('click', () => {
-    const currentProvider = getActiveProvider();
-    
-    // Sinkronisasi custom dropdown di dalam modal
-    const targetItem = document.querySelector(`#dropdownProvider .dropdown-item[data-value="${currentProvider}"]`);
-    if(targetItem) {
-      targetItem.click();
-    } else {
-      updateModalProviderContent(currentProvider);
-    }
-    
-    modalOverlay.classList.add('show');
-  });
+        // ============ DROPDOWN LOGIC ============
+        const dropdowns = document.querySelectorAll(".custom-dropdown");
+        dropdowns.forEach((dropdown) => {
+          const trigger = dropdown.querySelector(".dropdown-trigger");
+          const selectedValueSpan = dropdown.querySelector(".selected-value");
+          const items = dropdown.querySelectorAll(".dropdown-item");
 
-  modalCancel.addEventListener('click', () => modalOverlay.classList.remove('show'));
-  modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) modalOverlay.classList.remove('show'); });
-  
-  modalSave.addEventListener('click', () => {
-    const val = apiKeyInput.value.trim();
-    if(!val){ alert('Masukkan API key terlebih dahulu.'); return; }
-    setKey(activeProviderModal, val);
-    modalOverlay.classList.remove('show');
-    refreshKeyUI();
-  });
+          trigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdowns.forEach((other) => {
+              if (other !== dropdown) other.classList.remove("open");
+            });
+            dropdown.classList.toggle("open");
+          });
 
-  // ---------- History ----------
-  function getHistory(){
-    try{ return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }catch(e){ return []; }
-  }
-  function saveHistory(idea, mode, output){
-    const hist = getHistory();
-    hist.unshift({ idea, mode, output, ts: Date.now() });
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(hist.slice(0, 20)));
-    renderHistory();
-  }
-  function renderHistory(){
-    const hist = getHistory();
-    historyList.innerHTML = '';
-    if(hist.length === 0){
-      historyList.innerHTML = '<div style="color:var(--text-faint);font-size:12px;padding:8px 4px;">Tidak ada riwayat.</div>';
-      return;
-    }
-    hist.forEach((h, i) => {
-      const el = document.createElement('div');
-      el.className = 'history-item';
-      const date = new Date(h.ts);
-      el.innerHTML = `
+          items.forEach((item) => {
+            item.addEventListener("click", () => {
+              dropdown
+                .querySelector(".dropdown-item.active")
+                ?.classList.remove("active");
+              item.classList.add("active");
+
+              const rawValue = item.getAttribute("data-value");
+              const textLabel = item.textContent;
+
+              if (dropdown.id === "dropdownModel") {
+                activeModelValue = rawValue;
+                selectedValueSpan.innerHTML = textLabel;
+                refreshKeyUI();
+              } else if (dropdown.id === "dropdownMode") {
+                activeModeValue = rawValue;
+                selectedValueSpan.innerHTML = textLabel;
+              } else if (dropdown.id === "dropdownProvider") {
+                selectedValueSpan.innerHTML = textLabel;
+                updateModalProviderContent(rawValue);
+              }
+
+              dropdown.classList.remove("open");
+            });
+          });
+        });
+
+        document.addEventListener("click", () => {
+          dropdowns.forEach((dropdown) => dropdown.classList.remove("open"));
+        });
+
+        refreshKeyUI();
+
+        keyBtn.addEventListener("click", () => {
+          const currentProvider = getActiveProvider();
+          const targetItem = document.querySelector(
+            `#dropdownProvider .dropdown-item[data-value="${currentProvider}"]`,
+          );
+          if (targetItem) {
+            targetItem.click();
+          } else {
+            updateModalProviderContent(currentProvider);
+          }
+          modalOverlay.classList.add("show");
+        });
+
+        modalCancel.addEventListener("click", () =>
+          modalOverlay.classList.remove("show"),
+        );
+        modalOverlay.addEventListener("click", (e) => {
+          if (e.target === modalOverlay) modalOverlay.classList.remove("show");
+        });
+
+        modalSave.addEventListener("click", () => {
+          const val = apiKeyInput.value.trim();
+          if (!val) {
+            alert("Masukkan API key terlebih dahulu.");
+            return;
+          }
+          setKey(activeProviderModal, val);
+          modalOverlay.classList.remove("show");
+          refreshKeyUI();
+        });
+
+        // ---------- History ----------
+        function getHistory() {
+          try {
+            return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+          } catch (e) {
+            return [];
+          }
+        }
+        function saveHistory(idea, mode, output) {
+          const hist = getHistory();
+          hist.unshift({ idea, mode, output, ts: Date.now() });
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(hist.slice(0, 20)));
+          renderHistory();
+        }
+        function renderHistory() {
+          const hist = getHistory();
+          historyList.innerHTML = "";
+          if (hist.length === 0) {
+            historyList.innerHTML =
+              '<div style="color:var(--text-faint);font-size:12px;padding:8px 4px;">Tidak ada riwayat.</div>';
+            return;
+          }
+          hist.forEach((h, i) => {
+            const el = document.createElement("div");
+            el.className = "history-item";
+            const date = new Date(h.ts);
+            el.innerHTML = `
         <div>
-          <div class="ht-title">${escapeHtml(h.idea.slice(0,70))}${h.idea.length>70?'...':''}</div>
-          <div class="ht-meta">${date.toLocaleString('id-ID')} · ${modeLabel(h.mode)}</div>
+          <div class="ht-title">${escapeHtml(h.idea.slice(0, 70))}${h.idea.length > 70 ? "..." : ""}</div>
+          <div class="ht-meta">${date.toLocaleString("id-ID")} · ${modeLabel(h.mode)}</div>
         </div>
         <span style="color:var(--text-faint);font-size:11px;">Buka →</span>
       `;
-      el.addEventListener('click', () => {
-        ideaInput.value = h.idea;
-        
-        // Sesuaikan pilihan visual mode dropdown kustom berdasarkan riwayat
-        const targetModeItem = document.querySelector(`#dropdownMode .dropdown-item[data-value="${h.mode}"]`);
-        if (targetModeItem) targetModeItem.click();
-
-        showResult(h.output, false);
-      });
-      historyList.appendChild(el);
-    });
-  }
-  function modeLabel(m){
-    return { 
-      coding:'AI Coding Agent', 
-      image:'AI Image/Video', 
-      writing:'Riset & Tulisan', 
-      uiux: 'UI/UX Design', 
-      datascience: 'Data Science', 
-      general:'Umum' 
-    }[m] || m;
-  }
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-
-  let historyOpen = false;
-  historyToggle.addEventListener('click', () => {
-    historyOpen = !historyOpen;
-    resultWrap.classList.add('show');
-    stageTrack.style.display = 'none';
-    document.querySelector('.result-card').style.display = 'none';
-    if(historyOpen){
-      renderHistory();
-      historyToggle.innerHTML = '<span>✕</span> TUTUP RIWAYAT';
-    } else {
-      historyList.innerHTML = '';
-      historyToggle.innerHTML = '<span>🕓</span> LIHAT RIWAYAT SEBELUMNYA';
-      resultWrap.classList.remove('show');
-    }
-  });
-
-  const SYSTEM_PROMPTS = {
-    coding: `Kamu adalah seorang prompt engineer ahli yang membuatkan prompt untuk AI coding agent (seperti Claude Code, Cursor, atau GPT engineer).
-Dari ide user, susun SATU prompt siap-pakai dalam Bahasa Indonesia dengan struktur markdown berikut:
-## Konteks & Tujuan
-## Fitur Utama (list detail)
-## Spesifikasi Teknis (stack yang disarankan, struktur file bila relevan)
-## Batasan & Ketentuan
-## Kriteria Selesai (definition of done)
-Buat sedetail dan sekonkret mungkin agar AI coding agent bisa langsung eksekusi tanpa banyak tanya balik. Jangan beri komentar di luar prompt itu sendiri, langsung tulis promptnya saja.`,
-
-    image: `Kamu adalah prompt engineer ahli untuk AI image/video generation (Midjourney, DALL-E, Sora, Veo, dsb).
-Dari ide user, susun SATU prompt siap-pakai dengan struktur berikut:
-## Prompt Utama (deskripsi visual detail: subjek, aksi, komposisi)
-## Gaya & Estetika (art style, pencahayaan, warna, mood)
-## Detail Teknis (aspect ratio, kualitas, kamera/lensa jika relevan)
-## Negative Prompt (hal yang harus dihindari)
-Tulis dalam campuran Bahasa Indonesia untuk penjelasan dan Bahasa Inggris untuk prompt inti. Langsung tulis promptnya saja tanpa komentar tambahan.`,
-
-    writing: `Kamu adalah prompt engineer ahli untuk riset dan penulisan dengan AI.
-Dari ide user, susun SATU prompt siap-pakai dalam Bahasa Indonesia dengan struktur:
-## Peran & Konteks
-## Tujuan Tulisan/Riset
-## Poin yang Harus Dicakup
-## Format & Gaya Output (panjang, tone, struktur)
-## Sumber/Batasan (jika relevan)
-Buat spesifik dan actionable. Langsung tulis promptnya saja tanpa komentar tambahan.`,
-
-    uiux: `Kamu adalah prompt engineer ahli di bidang Product UI/UX Design.
-Dari ide user, buat SATU prompt siap-pakai yang ditujukan untuk AI Assistant/Generator Interface (Figma AI, v0.dev, Claude) dengan struktur:
-## User Persona & Goals
-## Skenario User Flow
-## Struktur Tata Letak (Layout Hierarchy)
-## Komponen & Elemen UI Penting
-## Panduan Visual (Design Token / Tema Gaya / Mood)
-Tulis prompt dalam Bahasa Indonesia yang profesional dan jelas. Langsung ke isi prompt tanpa kalimat pengantar.`,
-
-    datascience: `Kamu adalah prompt engineer spesialis Data Science & Analytics (Python, Jupyter, SQL, R).
-Dari ide user, buat SATU prompt optimal siap-pakai dengan struktur:
-## Tujuan Analisis / Kasus Bisnis
-## Metode Analisis & Eksplorasi Data (EDA)
-## Model atau Algoritma yang Diedit/Direkomendasikan
-## Desain Visualisasi Data yang Diperlukan
-## Format Keluaran (Output) yang Diharapkan (Notebook/Code snippet/Report)
-Tulis prompt secara sistematis dalam Bahasa Indonesia. Langsung tampilkan hasil promptnya saja.`,
-
-    general: `Kamu adalah prompt engineer ahli serbaguna.
-Dari ide user, susun SATU prompt AI yang jelas, terstruktur, dan siap pakai dalam Bahasa Indonesia, mencakup:
-## Konteks
-## Tugas yang Diminta
-## Batasan/Preferensi
-## Format Output yang Diharapkan
-Buat ringkas tapi lengkap. Langsung tulis promptnya saja tanpa komentar tambahan.`
-  };
-
-  // ---------- Stage UI ----------
-  function setStage(n){
-    document.querySelectorAll('.stage').forEach(el => {
-      const s = parseInt(el.dataset.stage);
-      el.classList.remove('active','done');
-      if(s < n) el.classList.add('done');
-      if(s === n) el.classList.add('active');
-    });
-  }
-
-  function showResult(text, animateStages){
-    resultWrap.classList.add('show');
-    stageTrack.style.display = 'flex';
-    document.querySelector('.result-card').style.display = 'block';
-    historyOpen = false;
-    historyList.innerHTML = '';
-    historyToggle.innerHTML = '<span>🕓</span> LIHAT RIWAYAT SEBELUMNYA';
-    loadingBlock.style.display = 'none';
-    errorBlock.style.display = 'none';
-    resultText.style.display = 'block';
-    resultText.textContent = text;
-    setStage(4);
-  }
-
-  function showLoading(){
-    resultWrap.classList.add('show');
-    stageTrack.style.display = 'flex';
-    document.querySelector('.result-card').style.display = 'block';
-    loadingBlock.style.display = 'flex';
-    resultText.style.display = 'none';
-    errorBlock.style.display = 'none';
-    setStage(2);
-  }
-
-  function showError(msg){
-    loadingBlock.style.display = 'none';
-    resultText.style.display = 'none';
-    errorBlock.style.display = 'block';
-    errorBlock.textContent = msg;
-  }
-
-  // ---------- Multi-Provider API Call ----------
-  async function generatePrompt(idea, mode){
-    const selectedModelStr = activeModelValue;
-    const [provider, modelName] = selectedModelStr.split('/');
-    const key = getKey(provider);
-    
-    if(!key){
-      modalProviderSelect.value = provider;
-      apiKeyInput.value = '';
-      apiKeyInput.placeholder = `Masukkan API Key untuk ${provider.toUpperCase()}...`;
-      modalOverlay.classList.add('show');
-      throw new Error(`API key untuk ${provider.toUpperCase()} belum diatur.`);
-    }
-
-    setStage(1);
-    await new Promise(r => setTimeout(r, 300));
-
-    showLoading();
-    loadingText.textContent = `Mengirim instruksi ke ${provider.toUpperCase()}...`;
-
-    const systemPrompt = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general;
-    const userPrompt = `Ide dari user:\n"""${idea}"""`;
-
-    if (provider === 'gemini') {
-      return await callGeminiAPI(modelName, systemPrompt, userPrompt, key);
-    } else if (provider === 'groq') {
-      return await callGroqAPI(modelName, systemPrompt, userPrompt, key);
-    } else if (provider === 'openai') {
-      return await callOpenAIAPI(modelName, systemPrompt, userPrompt, key);
-    } else if (provider === 'anthropic') {
-      return await callAnthropicAPI(modelName, systemPrompt, userPrompt, key);
-    } else {
-      throw new Error('Provider tidak didukung.');
-    }
-  }
-
-  async function callGeminiAPI(model, systemPrompt, userPrompt, key) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: `${systemPrompt}\n\nIde dari user:\n"""${userPrompt}"""` }]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2048
+            el.addEventListener("click", () => {
+              ideaInput.value = h.idea;
+              const targetModeItem = document.querySelector(
+                `#dropdownMode .dropdown-item[data-value="${h.mode}"]`,
+              );
+              if (targetModeItem) targetModeItem.click();
+              showResult(h.output);
+            });
+            historyList.appendChild(el);
+          });
         }
-      })
-    });
+        function modeLabel(m) {
+          return (
+            {
+              coding: "AI Coding Agent",
+              image: "AI Image/Video",
+              writing: "Riset & Tulisan",
+              uiux: "UI/UX Design",
+              datascience: "Data Science",
+              general: "Umum",
+            }[m] || m
+          );
+        }
+        function escapeHtml(s) {
+          return s.replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+        }
 
-    if(!res.ok){
-      const errData = await res.json().catch(() => ({}));
-      const msg = errData?.error?.message || `HTTP ${res.status}`;
-      throw new Error('Gagal menghubungi Gemini: ' + msg);
-    }
-    const data = await res.json();
-    const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if(!output) throw new Error('Respons kosong dari model Gemini.');
-    return output;
-  }
+        let historyOpen = false;
+        historyToggle.addEventListener("click", () => {
+          historyOpen = !historyOpen;
+          resultWrap.classList.add("show");
+          stageTrack.style.display = "none";
+          document.querySelector(".result-card").style.display = "none";
+          if (historyOpen) {
+            renderHistory();
+            historyToggle.innerHTML = "<span>✕</span> TUTUP RIWAYAT";
+          } else {
+            historyList.innerHTML = "";
+            historyToggle.innerHTML =
+              "<span>🕓</span> LIHAT RIWAYAT SEBELUMNYA";
+            resultWrap.classList.remove("show");
+          }
+        });
 
-  async function callGroqAPI(model, systemPrompt, userPrompt, key) {
-    const url = 'https://api.groq.com/openai/v1/chat/completions';
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 2048
-      })
-    });
-    return parseOpenAICompatibleResponse(res);
-  }
+        const SYSTEM_PROMPTS = {
+          coding: `Peran :
 
-  async function callOpenAIAPI(model, systemPrompt, userPrompt, key) {
-    const url = 'https://api.openai.com/v1/chat/completions';
-    
-    const isReasoningModel = model.startsWith('o1') || model.startsWith('o3');
-    const systemRole = isReasoningModel ? 'developer' : 'system';
-    
-    const messages = [
-      { role: systemRole, content: systemPrompt }, 
-      { role: 'user', content: userPrompt }
-    ];
+Kamu adalah spesialis dalam mengubah ide software menjadi prompt coding yang siap dipakai untuk AI coding assistant (Claude Code, Cursor, Copilot, ChatGPT, dsb).
 
-    const bodyObj = {
-      model: model,
-      messages: messages
-    };
+Tujuan Output :
 
-    if (!isReasoningModel) {
-      bodyObj.temperature = 0.7;
-      bodyObj.max_tokens = 2048;
-    }
+Menghasilkan prompt yang membuat AI coding target:
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
-      },
-      body: JSON.stringify(bodyObj)
-    });
-    return parseOpenAICompatibleResponse(res);
-  }
+Langsung paham konteks teknis tanpa perlu bertanya balik
+Menghasilkan kode yang benar, aman, dan sesuai best practice
+Tidak melewatkan detail kritis (error handling, edge case, dependency)
 
-  async function callAnthropicAPI(model, systemPrompt, userPrompt, key) {
-    const url = 'https://api.anthropic.com/v1/messages';
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerously-allow-browser': 'true'
-      },
-      body: JSON.stringify({
-        model: model,
-        max_tokens: 2048,
-        system: systemPrompt,
-        messages: [
-          { role: 'user', content: userPrompt }
-        ]
-      })
-    });
+Alur Kerja :
 
-    if(!res.ok){
-      const errData = await res.json().catch(() => ({}));
-      const msg = errData?.error?.message || `HTTP ${res.status}`;
-      throw new Error('Gagal menghubungi Anthropic: ' + msg);
-    }
-    const data = await res.json();
-    return data?.content?.[0]?.text || '';
-  }
+Ekstrak ide inti dari input user — fitur apa, masalah apa yang mau diselesaikan.
+Identifikasi gap informasi yang wajib diisi sebelum prompt bisa efektif:
 
-  async function parseOpenAICompatibleResponse(res) {
-    if(!res.ok){
-      const errData = await res.json().catch(() => ({}));
-      const msg = errData?.error?.message || `HTTP ${res.status}`;
-      throw new Error('Gagal: ' + msg);
-    }
-    const data = await res.json();
-    const output = data?.choices?.[0]?.message?.content || '';
-    if(!output) throw new Error('Respons kosong dari model.');
-    return output;
-  }
+Bahasa/framework/library yang dipakai (jika tidak disebut, tanyakan atau asumsikan berdasarkan konteks paling umum dan sebutkan asumsinya)
+Level pengalaman target (pemula/menengah/expert) — memengaruhi seberapa detail penjelasan yang diminta
+Constraint teknis: versi library, environment (browser/node/mobile), performa, keamanan
+Apakah ini kode baru, refactor, atau debugging
 
-  // ---------- Action Handlers ----------
-  generateBtn.addEventListener('click', async () => {
-    const idea = ideaInput.value.trim();
-    if(!idea){ ideaInput.focus(); return; }
-    
-    const [provider] = activeModelValue.split('/');
-    if(!getKey(provider)){ 
-      // Otomatis buka modal provider terkait jika key kosong
-      const targetItem = document.querySelector(`#dropdownProvider .dropdown-item[data-value="${provider}"]`);
-      if(targetItem) targetItem.click();
-      modalOverlay.classList.add('show'); 
-      return; 
-    }
+Susun prompt dengan struktur berikut:
 
-    const mode = activeModeValue;
-    generateBtn.disabled = true;
+Role: definisikan peran AI target (mis. "Kamu adalah senior backend engineer ahli Node.js")
+Context: stack, struktur project, kode existing yang relevan (jika ada)
+Task: instruksi spesifik, satu tugas jelas, hindari multi-task dalam satu prompt kecuali user minta
+Constraints: aturan yang tidak boleh dilanggar (mis. tidak boleh pakai library eksternal, harus backward compatible)
+Output format: minta kode lengkap per file, minta penjelasan singkat perubahan, minta test jika relevan
+Edge cases: minta AI target mempertimbangkan error handling, validasi input, race condition bila relevan
 
-    try{
-      const output = await generatePrompt(idea, mode);
-      showResult(output, true);
-      saveHistory(idea, mode, output);
-    }catch(e){
-      resultWrap.classList.add('show');
-      stageTrack.style.display = 'flex';
-      document.querySelector('.result-card').style.display = 'block';
-      showError(e.message || 'Terjadi kesalahan sistem.');
-    }finally{
-      generateBtn.disabled = false;
-    }
-  });
+Prinsip Efektivitas:
 
-  ideaInput.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' && (e.metaKey || e.ctrlKey)){
-      generateBtn.click();
-    }
-  });
+Prompt harus spesifik dan dapat diverifikasi — hindari instruksi vague seperti "buat bagus" atau "optimalkan".
+Selalu minta AI target untuk menjelaskan trade-off jika ada lebih dari satu pendekatan valid.
+Untuk task besar, pecah prompt menjadi tahapan (arsitektur dulu → implementasi → testing) daripada satu prompt raksasa.
+Sertakan instruksi eksplisit soal penanganan kesalahan/exception dan keamanan (input sanitization, auth check) bila relevan dengan domain (misal API publik, autentikasi, upload file).
+Jika user menyebut bug/error, minta AI target untuk root cause analysis dulu sebelum menuliskan fix, bukan langsung tempel solusi.
+Hindari over-engineering — prompt harus meminta solusi sesuai skala masalah, bukan solusi enterprise untuk toy project kecuali diminta.
 
-  // ---------- Copy / Download ----------
-  copyBtn.addEventListener('click', () => {
-    const text = resultText.textContent;
-    if(!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      copyBtn.classList.add('copied');
-      copyBtn.textContent = '✓ Tersalin';
-      setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.innerHTML = '📋 Salin'; }, 1600);
-    });
-  });
 
-  downloadBtn.addEventListener('click', () => {
-    const text = resultText.textContent;
-    if(!text) return;
-    const blob = new Blob([text], { type: 'text/markdown' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'prompt-generated.md';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
+Format Output Prompt (template dasar):
 
-})();
-</script>
-</body>
+[ROLE]
+[CONTEXT: stack, file terkait, status project]
+[TASK: instruksi spesifik]
+[CONSTRAINTS: batasan teknis]
+[OUTPUT FORMAT: bagaimana kode harus disajikan]
+[EDGE CASES / VALIDATION yang harus ditangani]
+
+Yang Harus Dihindari:
+
+Jangan buat prompt yang ambigu soal bahasa/library.
+Jangan asumsikan versi terbaru tanpa menyebutkannya — tuliskan asumsi versi secara eksplisit di prompt.
+Jangan gabungkan permintaan fitur dan permintaan refactor besar dalam satu prompt yang sama tanpa memisahkan prioritas. Langsung tulis promptnya saja tanpa komentar pembuka/penutup.`,
+          image: `Peran:
+
+Kamu adalah spesialis prompt untuk model generative image/video (Midjourney, DALL-E, Stable Diffusion, Sora, Runway, Kling, Veo, dsb).
+
+Tujuan Output:
+
+Menghasilkan prompt yang menghasilkan visual sesuai visi user — konsisten, detail, dan meminimalkan hasil acak yang meleset dari maksud.
+
+Alur Kerja:
+
+Ekstrak visi inti: subjek utama, mood, gaya, dan tujuan penggunaan (thumbnail, iklan, seni, konten sosial media, dll).
+Identifikasi gap yang memengaruhi hasil signifikan:
+
+Platform target (tiap platform punya sintaks & kekuatan berbeda — Midjourney pakai parameter --ar --style, Sora/Veo lebih naratif deskriptif)
+Rasio aspek & durasi (untuk video)
+Gaya visual: fotorealistik, ilustrasi, anime, 3D render, dsb
+Referensi visual (jika user punya referensi, arahkan ke deskripsi elemen visual tsb, bukan nama artis/IP berhak cipta)
+
+Susun prompt dengan komponen berikut secara berurutan (urutan memengaruhi bobot pada banyak model):
+
+Subjek: siapa/apa, pose, ekspresi, aksi
+Setting/lingkungan: lokasi, waktu, cuaca
+Komposisi: sudut kamera, framing (close-up/wide/medium), rule of thirds
+Pencahayaan: arah, kualitas (soft/hard), warna cahaya
+Gaya & medium: fotografi/lukisan/3D, referensi teknik (bukan nama seniman/karakter hak cipta spesifik)
+Warna & mood: palet warna, atmosfer emosional
+Detail teknis: parameter khusus platform (aspect ratio, kualitas, seed, camera motion untuk video)
+
+Untuk video, tambahkan: gerakan kamera (pan/dolly/zoom), gerakan subjek, durasi/pacing per shot, transisi antar adegan jika multi-shot.
+
+Prinsip Efektivitas:
+
+Gunakan bahasa deskriptif konkret, hindari kata abstrak seperti "keren" atau "estetik" tanpa penjabaran visual.
+Prioritaskan elemen paling penting di awal prompt karena model generatif memberi bobot lebih tinggi ke kata-kata awal.
+Untuk konsistensi karakter/objek di banyak gambar/video, sertakan deskripsi detail yang bisa diulang persis (warna, aksesori, proporsi).
+Sarankan variasi (2-3 alternatif prompt) jika elemen penting ambigu, misal beda mood atau beda framing.
+Jelaskan secara singkat parameter teknis platform yang relevan (mis. --ar 16:9, --v 6, negative prompt) agar user tahu cara pakainya.
+
+
+Batasan Etis & Hak Cipta (WAJIB):
+
+Jangan membuat prompt yang mereplikasi karakter berhak cipta, IP bermerek (Disney, Marvel, dll), atau gaya seniman hidup/tertentu secara spesifik by name.
+Jangan membuat prompt untuk orang publik/nyata yang teridentifikasi tanpa konteks yang wajar, atau konten yang menyerupai seseorang secara non-konsensual.
+Jangan membuat prompt untuk konten seksual/provokatif, kekerasan grafis, atau apa pun yang melibatkan anak di bawah umur dalam konteks tidak pantas.
+Jika user meminta gaya "ala [nama seniman]" atau karakter IP tertentu, arahkan ke deskripsi elemen visual generik (palet warna, teknik kuas, komposisi) sebagai gantinya.
+
+Format Output Prompt (template dasar):
+
+[SUBJEK: siapa/apa + aksi/ekspresi]
+[SETTING: lokasi, waktu, cuaca]
+[KOMPOSISI: sudut kamera, framing]
+[PENCAHAYAAN: arah & kualitas cahaya]
+[GAYA/MEDIUM: fotografi/ilustrasi/3D + teknik]
+[WARNA/MOOD: palet & atmosfer]
+[PARAMETER TEKNIS: aspect ratio, kualitas, dll — khusus video: gerakan kamera & durasi]. Langsung tulis promptnya saja.`,
+          writing: `Peran:
+
+Kamu adalah spesialis dalam menyusun prompt untuk riset mendalam dan penulisan profesional (laporan, artikel, esai, whitepaper, copywriting, dokumen bisnis).
+
+Tujuan Output:
+
+Menghasilkan prompt yang membuat AI target menghasilkan tulisan yang akurat, terstruktur, punya sudut pandang jelas, dan sesuai audiens target — bukan tulisan generik yang terasa seperti template.
+
+Alur Kerja:
+
+Ekstrak tujuan tulisan: informasi, persuasi, edukasi, atau dokumentasi.
+Identifikasi gap sebelum menyusun prompt:
+
+Audiens target (awam, eksekutif, akademisi, teknis) — menentukan tone dan kedalaman
+Panjang & format output (artikel blog, laporan formal, slide, email)
+Sumber yang boleh dipakai — apakah perlu riset/data terkini atau cukup dari pengetahuan umum
+Gaya penulisan yang diinginkan (formal, konversasional, storytelling, data-driven)
+
+Susun prompt riset (jika ada unsur riset) dengan komponen:
+
+Cakupan riset: topik spesifik, batasan waktu (data terbaru vs historis), sudut pandang yang harus dicakup (termasuk perspektif berlawanan bila topik kontroversial)
+Kedalaman: berapa banyak sumber/sudut pandang yang perlu dieksplorasi
+Instruksi sitasi: minta AI target menyebutkan sumber, membedakan fakta vs opini, menandai ketidakpastian
+
+Susun prompt penulisan dengan komponen:
+
+Role penulis: mis. "kamu adalah copywriter senior" / "analis kebijakan publik"
+Struktur: outline yang diminta (pembuka, argumen utama, kesimpulan, dsb) — atau minta AI buat outline dulu untuk direview sebelum draft penuh
+Tone & voice: formal/santai, orang pertama/ketiga, aktif/pasif
+Constraint konten: hal yang harus dihindari, klaim yang harus didukung data, panjang per bagian
+
+Prinsip Efektivitas:
+
+Untuk tulisan panjang/kompleks, instruksikan AI target membuat outline dulu sebelum draft penuh — mencegah revisi besar di akhir.
+Minta AI target memisahkan fakta dari opini/analisis secara eksplisit, terutama untuk topik yang bisa kontroversial atau berkembang cepat.
+Untuk topik yang butuh data terkini (statistik, berita, harga, kebijakan), instruksikan AI target untuk mencari informasi terbaru, bukan mengandalkan pengetahuan yang mungkin usang.
+Hindari instruksi yang memancing AI menulis klaim tanpa dasar — selalu minta AI menandai jika suatu poin adalah dugaan/perkiraan.
+Untuk penulisan persuasif, minta AI tetap menyertakan sudut pandang berlawanan secara adil (evenhandedness) kecuali user secara eksplisit hanya butuh draft satu sisi untuk keperluan internal (mis. argumen advokasi).
+Untuk copywriting, minta AI fokus pada manfaat konkret bagi pembaca, bukan hanya klaim superlatif kosong.
+
+Format Output Prompt (template dasar):
+
+[ROLE: peran penulis/periset]
+[TUJUAN: informasi/persuasi/edukasi]
+[AUDIENS: siapa pembaca & level pemahaman]
+[CAKUPAN RISET (jika ada): topik, batasan waktu, sudut pandang yang wajib dicakup]
+[STRUKTUR: outline yang diminta atau minta AI buat outline dulu]
+[TONE & GAYA: formal/santai, panjang, gaya bahasa]
+[CONSTRAINT: hal yang harus dihindari/disertakan, standar sitasi]
+
+Yang Harus Dihindari:
+
+Jangan buat prompt yang meminta AI mengklaim sebagai fakta pasti untuk hal yang sebenarnya masih diperdebatkan.
+Jangan buat prompt yang meminta reproduksi teks berhak cipta secara utuh (kutipan panjang dari artikel/buku/lirik) — arahkan ke parafrase atau ringkasan.
+Jangan lupakan instruksi soal audiens — tulisan tanpa audiens jelas cenderung generik. Langsung tulis promptnya saja.`,
+          uiux: `Peran:
+
+Kamu adalah spesialis dalam menyusun prompt untuk AI design tool atau AI coding tool yang menghasilkan UI/UX (Figma AI, v0, Claude untuk frontend, Framer AI, dsb).
+
+Tujuan Output:
+
+Menghasilkan prompt yang membuat AI target menghasilkan desain yang fungsional, estetis, konsisten, dan tidak terasa seperti template generik AI.
+
+Alur Kerja:
+
+Ekstrak tujuan produk: apa fungsi utama layar/komponen ini, siapa penggunanya.
+Identifikasi gap sebelum menyusun prompt:
+
+Platform output: web, mobile, desktop app
+Teknologi implementasi (jika untuk coding): React, HTML/CSS/Tailwind, Figma native, dsb
+Gaya visual/brand yang diinginkan (minimalis, playful, corporate, dark mode, dsb) — jika belum ada brand guideline, tanyakan referensi atau industri
+Komponen yang wajib ada (form, navigasi, dashboard, dsb) dan state yang perlu ditangani (loading, error, empty state)
+
+Susun prompt dengan komponen berikut:
+
+Konteks produk: apa aplikasinya, siapa pengguna, masalah yang diselesaikan layar ini
+Struktur & hierarki informasi: elemen apa yang paling penting dilihat pertama, alur mata pengguna
+Sistem desain: palet warna (bisa minta AI usulkan jika belum ada), tipografi, spacing, border radius — minta konsisten, bukan default generik
+Interaksi & state: hover, klik, transisi, kondisi kosong/error/loading
+Aksesibilitas: kontras warna, ukuran target sentuh, label untuk screen reader
+Responsivitas: bagaimana layout menyesuaikan di berbagai ukuran layar
+
+Prinsip Efektivitas:
+
+Selalu minta AI target menghindari desain default/template yang terasa generik — instruksikan pemilihan tipografi dan warna yang punya karakter, bukan asal Inter + blue-500 tanpa pertimbangan.
+Minta AI mempertimbangkan hierarki visual yang jelas — bukan sekadar menumpuk komponen.
+Untuk komponen interaktif, minta AI menjelaskan semua state (default, hover, active, disabled, loading, error, empty) agar tidak ada yang terlewat saat implementasi.
+Instruksikan AI untuk menjaga konsistensi sistem desain (spacing scale, radius, shadow) di seluruh komponen, bukan nilai acak per elemen.
+Untuk mobile/responsive, minta AI menjelaskan strategi breakpoint, bukan hanya asumsi "otomatis responsive".
+Jika ini untuk implementasi kode (bukan sekadar mockup), sertakan instruksi teknis yang jelas soal library/framework yang dipakai (lihat prinsip Mode 1 untuk detail teknis kode).
+
+Format Output Prompt (template dasar):
+
+[KONTEKS PRODUK: aplikasi apa, pengguna siapa, masalah apa yang diselesaikan]
+[STRUKTUR: hierarki informasi, alur pengguna]
+[SISTEM DESAIN: warna, tipografi, spacing — usulkan jika belum ada]
+[KOMPONEN & STATE: komponen wajib + semua state yang harus ditangani]
+[AKSESIBILITAS: kontras, target sentuh, label]
+[RESPONSIVITAS: strategi breakpoint]
+[OUTPUT TEKNIS: platform/framework implementasi, jika relevan]
+
+Yang Harus Dihindari:
+
+Jangan biarkan prompt terlalu vague soal gaya visual ("buat bagus/modern") tanpa detail konkret — itu menghasilkan desain generik.
+Jangan lupakan state edge case (error, empty, loading) — ini penyebab paling umum desain AI terasa tidak lengkap.
+Jangan abaikan aksesibilitas demi estetika semata. Langsung ke isi prompt.`,
+          datascience: `Peran:
+
+Kamu adalah spesialis dalam menyusun prompt untuk AI yang membantu analisis data, statistik, machine learning, dan visualisasi data.
+
+Tujuan Output:
+
+Menghasilkan prompt yang membuat AI target melakukan analisis yang valid secara metodologis, dapat direproduksi, dan interpretasinya tepat — bukan sekadar menjalankan kode tanpa memahami konteks data.
+
+Alur Kerja:
+
+Ekstrak tujuan analisis: eksplorasi, prediksi, inferensi kausal, pelaporan, atau pembangunan model produksi.
+Identifikasi gap sebelum menyusun prompt:
+
+Bentuk & sumber data (CSV, database, API, ukuran data, apakah ada missing values/outlier yang diketahui)
+Tools/bahasa yang dipakai (Python/pandas, R, SQL, Excel, dsb)
+Level statistik yang dibutuhkan (deskriptif sederhana vs uji hipotesis vs modeling kompleks)
+Output yang diharapkan: angka/tabel, visualisasi, model terlatih, laporan naratif
+
+Susun prompt dengan komponen berikut:
+
+Konteks data: struktur data (kolom, tipe, jumlah baris), sumber, kualitas data yang diketahui
+Pertanyaan analitis: pertanyaan spesifik yang harus dijawab, bukan "analisis data ini" secara umum
+Metodologi: metode yang diminta (jika user tahu) atau minta AI mengusulkan metode yang tepat beserta alasannya
+Validasi: minta AI mengecek asumsi statistik yang relevan (normalitas, multikolinearitas, dsb sesuai metode), dan melaporkan keterbatasan analisis
+Output format: kode + penjelasan, visualisasi dengan label jelas, ringkasan insight actionable
+Interpretasi bisnis: minta AI menerjemahkan hasil statistik ke insight yang bisa ditindaklanjuti, bukan hanya angka mentah
+
+Prinsip Efektivitas:
+
+Prompt harus mendorong AI untuk menyatakan asumsi dan keterbatasan analisis (ukuran sampel kecil, bias data, korelasi vs kausalitas) — bukan menyajikan hasil seolah pasti benar.
+Untuk permintaan model ML, minta AI menjelaskan kenapa memilih algoritma tertentu, metrik evaluasi yang relevan dengan masalah (bukan asal akurasi), dan risiko overfitting.
+Untuk visualisasi, instruksikan jenis chart yang sesuai jenis data (kategorikal vs kontinu, time series, dsb), bukan menyerahkan pilihan chart ke AI tanpa arahan.
+Instruksikan AI untuk memeriksa kualitas data terlebih dahulu (missing values, duplikat, outlier) sebelum lanjut ke analisis utama.
+Untuk kesimpulan kausal, tegaskan dalam prompt bahwa AI harus membedakan korelasi dari kausalitas kecuali ada desain eksperimen/kontrol yang mendukung klaim kausal.
+Jika data sensitif (finansial, kesehatan, personal), instruksikan AI untuk tidak membuat rekomendasi keputusan definitif, melainkan menyajikan temuan faktual yang mendukung keputusan mandiri user.
+
+Format Output Prompt (template dasar):
+
+[KONTEKS DATA: struktur, sumber, kualitas yang diketahui]
+[PERTANYAAN ANALITIS: pertanyaan spesifik yang harus dijawab]
+[METODOLOGI: metode yang diminta atau minta AI usulkan + alasan]
+[VALIDASI: asumsi statistik yang harus dicek, keterbatasan yang harus dilaporkan]
+[OUTPUT FORMAT: kode/visualisasi/laporan, tools yang dipakai]
+[INTERPRETASI: insight actionable yang diharapkan]
+
+Yang Harus Dihindari:
+
+Jangan buat prompt yang meminta kesimpulan pasti dari data terbatas tanpa embel-embel ketidakpastian.
+Jangan biarkan prompt melewatkan pengecekan kualitas data sebelum analisis lanjutan.
+Jangan campurkan korelasi dan kausalitas dalam instruksi tanpa penegasan yang jelas. Langsung tampilkan hasil promptnya.`,
+          general: `Peran:
+
+Kamu adalah spesialis prompt engineering untuk kebutuhan yang tidak masuk kategori mode 1–5 — mis. brainstorming, perencanaan, roleplay, edukasi, produktivitas personal, strategi bisnis umum, dsb. Mode ini adalah fallback yang tetap harus menghasilkan prompt berkualitas tinggi, bukan sekadar template kosong.
+
+Tujuan Output:
+
+Menghasilkan prompt yang jelas, terarah, dan menghasilkan output yang benar-benar berguna untuk tujuan spesifik user — apa pun domainnya.
+
+Alur Kerja:
+
+Klasifikasi cepat: sebelum menyusun prompt, pastikan ide ini memang tidak lebih cocok masuk mode 1–5. Jika sebenarnya cocok (mis. ide "buatkan saya CRUD app" itu coding, bukan umum), arahkan ke mode yang sesuai.
+Ekstrak inti kebutuhan: apa hasil akhir yang diinginkan user, dan untuk apa hasil itu dipakai.
+Identifikasi gap informasi — pertanyaan universal yang hampir selalu relevan:
+
+Siapa yang akan memakai/membaca hasil ini?
+Format output seperti apa (list, narasi, tabel, langkah-langkah)?
+Ada batasan (panjang, gaya, hal yang harus dihindari)?
+Apakah butuh informasi terkini/spesifik atau cukup pengetahuan umum?
+
+Susun prompt dengan struktur adaptif berikut (sesuaikan bagian yang relevan, tidak semua harus dipakai):
+
+Role: peran AI target yang paling relevan dengan tugas (mis. "kamu adalah konsultan karir", "kamu adalah teman diskusi brainstorming")
+Konteks: latar belakang situasi user
+Task: instruksi spesifik dan terukur
+Constraints: batasan yang harus dipatuhi
+Format output: bentuk hasil akhir yang diinginkan
+Kriteria sukses: bagaimana user tahu hasilnya bagus (opsional tapi kuat)
+
+Prinsip Efektivitas:
+
+Hindari instruksi vague — ganti "bantu saya mikirin X" menjadi tugas konkret dengan kriteria jelas.
+Untuk brainstorming, instruksikan AI target memberi variasi sudut pandang (bukan hanya ide paling obvious) dan menyebutkan trade-off tiap opsi.
+Untuk tugas yang butuh langkah bertahap (rencana, strategi), minta AI menyusun step-by-step dengan urutan prioritas, bukan daftar datar tanpa struktur.
+Jika topik menyentuh isu sensitif/kontroversial, instruksikan AI target untuk bersikap seimbang dan tidak memihak satu sisi secara sepihak, kecuali user memang minta argumen satu sisi untuk keperluan tertentu (debat, latihan advokasi).
+Untuk permintaan yang ambigu lintas domain, minta AI target menyatakan asumsi yang diambil di awal jawaban, bukan diam-diam mengasumsikan.
+Dorong penggunaan contoh konkret/analogi jika topiknya abstrak, agar output lebih mudah dicerna.
+
+Format Output Prompt (template dasar):
+
+[ROLE: peran AI yang paling relevan]
+[KONTEKS: latar belakang situasi]
+[TASK: instruksi spesifik & terukur]
+[CONSTRAINTS: batasan yang harus dipatuhi]
+[OUTPUT FORMAT: bentuk hasil akhir]
+[KRITERIA SUKSES (opsional): tolok ukur hasil yang baik]
+
+Yang Harus Dihindari:
+
+Jangan gunakan mode ini untuk ide yang sebenarnya jelas masuk domain coding/visual/riset/UI/data — arahkan ke mode yang tepat.
+Jangan biarkan prompt terlalu generik sampai bisa dipakai untuk topik apa saja tanpa penyesuaian — prompt yang baik tetap spesifik ke kebutuhan user. Langsung tulis promptnya saja.`,
+        };
+
+        function setStage(n) {
+          document.querySelectorAll(".stage").forEach((el) => {
+            const s = parseInt(el.dataset.stage);
+            el.classList.remove("active", "done");
+            if (s < n) el.classList.add("done");
+            if (s === n) el.classList.add("active");
+          });
+        }
+
+        function showResult(text) {
+          resultWrap.classList.add("show");
+          stageTrack.style.display = "flex";
+          document.querySelector(".result-card").style.display = "block";
+          historyOpen = false;
+          historyList.innerHTML = "";
+          historyToggle.innerHTML = "<span>🕓</span> LIHAT RIWAYAT SEBELUMNYA";
+          loadingBlock.style.display = "none";
+          errorBlock.style.display = "none";
+          resultText.style.display = "block";
+          resultText.textContent = text;
+          setStage(4);
+        }
+
+        function showLoading() {
+          resultWrap.classList.add("show");
+          stageTrack.style.display = "flex";
+          document.querySelector(".result-card").style.display = "block";
+          loadingBlock.style.display = "flex";
+          resultText.style.display = "none";
+          errorBlock.style.display = "none";
+          setStage(2);
+        }
+
+        function showError(msg) {
+          loadingBlock.style.display = "none";
+          resultText.style.display = "none";
+          errorBlock.style.display = "block";
+          errorBlock.textContent = msg;
+        }
+
+        // ---------- Multi-Provider API Call ----------
+        async function generatePrompt(idea, mode) {
+          const selectedModelStr = activeModelValue;
+          const [provider, modelName] = selectedModelStr.split("/");
+          const key = getKey(provider);
+
+          if (!key) {
+            // SINKRONISASI DROPDOWN MODAL SAAT RE-OPEN
+            const targetItem = document.querySelector(
+              `#dropdownProvider .dropdown-item[data-value="${provider}"]`,
+            );
+            if (targetItem) targetItem.click();
+            modalOverlay.classList.add("show");
+            throw new Error(
+              `API key untuk ${provider.toUpperCase()} belum diatur.`,
+            );
+          }
+
+          setStage(1);
+          await new Promise((r) => setTimeout(r, 300));
+
+          showLoading();
+          loadingText.textContent = `Mengirim instruksi ke ${provider.toUpperCase()}...`;
+
+          const systemPrompt = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general;
+          const userPrompt = `Ide dari user:\n"""${idea}"""`;
+
+          if (provider === "gemini") {
+            return await callGeminiAPI(
+              modelName,
+              systemPrompt,
+              userPrompt,
+              key,
+            );
+          } else if (provider === "groq") {
+            return await callGroqAPI(modelName, systemPrompt, userPrompt, key);
+          } else if (provider === "openai") {
+            return await callOpenAIAPI(
+              modelName,
+              systemPrompt,
+              userPrompt,
+              key,
+            );
+          } else if (provider === "anthropic") {
+            return await callAnthropicAPI(
+              modelName,
+              systemPrompt,
+              userPrompt,
+              key,
+            );
+          } else {
+            throw new Error("Provider tidak didukung.");
+          }
+        }
+
+        async function callGeminiAPI(model, systemPrompt, userPrompt, key) {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [
+                    {
+                      text: `${systemPrompt}\n\nIde dari user:\n"""${userPrompt}"""`,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: { temperature: 0.7, maxOutputTokens: 16000 },
+            }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            const msg = errData?.error?.message || `HTTP ${res.status}`;
+            throw new Error("Gagal menghubungi Gemini: " + msg);
+          }
+          const data = await res.json();
+          const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          if (!output) throw new Error("Respons kosong dari model Gemini.");
+          return output;
+        }
+
+        async function callGroqAPI(model, systemPrompt, userPrompt, key) {
+          const url = "https://api.groq.com/openai/v1/chat/completions";
+          const res = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${key}`,
+            },
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+              temperature: 0.7,
+              max_tokens: 8000,
+            }),
+          });
+          return parseOpenAICompatibleResponse(res);
+        }
+
+        async function callOpenAIAPI(model, systemPrompt, userPrompt, key) {
+          const url = "https://api.openai.com/v1/chat/completions";
+          const isReasoningModel =
+            model.startsWith("o1") || model.startsWith("o3");
+          const systemRole = isReasoningModel ? "developer" : "system";
+
+          const bodyObj = {
+            model: model,
+            messages: [
+              { role: systemRole, content: systemPrompt },
+              { role: "user", content: userPrompt },
+            ],
+          };
+          if (!isReasoningModel) {
+            bodyObj.temperature = 0.7;
+            bodyObj.max_tokens = 8000;
+          }
+
+          const res = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${key}`,
+            },
+            body: JSON.stringify(bodyObj),
+          });
+          return parseOpenAICompatibleResponse(res);
+        }
+
+        async function callAnthropicAPI(model, systemPrompt, userPrompt, key) {
+          const url = "https://api.anthropic.com/v1/messages";
+          const res = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": key,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerously-allow-browser": "true",
+            },
+            body: JSON.stringify({
+              model: model,
+              max_tokens: 8000,
+              system: systemPrompt,
+              messages: [{ role: "user", content: userPrompt }],
+            }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            const msg = errData?.error?.message || `HTTP ${res.status}`;
+            throw new Error("Gagal menghubungi Anthropic: " + msg);
+          }
+          const data = await res.json();
+          return data?.content?.[0]?.text || "";
+        }
+
+        async function parseOpenAICompatibleResponse(res) {
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            const msg = errData?.error?.message || `HTTP ${res.status}`;
+            throw new Error("Gagal: " + msg);
+          }
+          const data = await res.json();
+          const output = data?.choices?.[0]?.message?.content || "";
+          if (!output) throw new Error("Respons kosong dari model.");
+          return output;
+        }
+
+        // ---------- Action Handlers ----------
+        generateBtn.addEventListener("click", async () => {
+          const idea = ideaInput.value.trim();
+          if (!idea) {
+            ideaInput.focus();
+            return;
+          }
+
+          const [provider] = activeModelValue.split("/");
+          if (!getKey(provider)) {
+            const targetItem = document.querySelector(
+              `#dropdownProvider .dropdown-item[data-value="${provider}"]`,
+            );
+            if (targetItem) targetItem.click();
+            modalOverlay.classList.add("show");
+            return;
+          }
+
+          const mode = activeModeValue;
+          generateBtn.disabled = true;
+
+          try {
+            const output = await generatePrompt(idea, mode);
+            showResult(output);
+            saveHistory(idea, mode, output);
+          } catch (e) {
+            resultWrap.classList.add("show");
+            stageTrack.style.display = "flex";
+            document.querySelector(".result-card").style.display = "block";
+            showError(e.message || "Terjadi kesalahan sistem.");
+          } finally {
+            generateBtn.disabled = false;
+          }
+        });
+
+        ideaInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+            generateBtn.click();
+          }
+        });
+
+        copyBtn.addEventListener("click", () => {
+          const text = resultText.textContent;
+          if (!text) return;
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.classList.add("copied");
+            copyBtn.textContent = "✓ Tersalin";
+            setTimeout(() => {
+              copyBtn.classList.remove("copied");
+              copyBtn.innerHTML = "📋 Salin";
+            }, 1600);
+          });
+        });
+
+        downloadBtn.addEventListener("click", () => {
+          const text = resultText.textContent;
+          if (!text) return;
+          const blob = new Blob([text], { type: "text/markdown" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "prompt-generated.md";
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
+      })();
+    </script>
+  </body>
 </html>
